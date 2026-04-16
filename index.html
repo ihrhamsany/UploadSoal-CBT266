@@ -15,11 +15,11 @@
         /* Custom Animations */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        .animate-zoom-in { animation: zoomIn 0.5s ease-out forwards; }
-        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-zoom-in { animation: zoomIn 0.4s ease-out forwards; }
+        .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
 
         /* Styling Checkbox Kelas agar interaktif tanpa Javascript ribet */
         .kelas-checkbox:checked + span {
@@ -40,7 +40,7 @@
     <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-pulse" style="animation-delay: 2s;"></div>
 
     <!-- Main Container - Glassmorphism -->
-    <div class="bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] rounded-3xl w-full max-w-3xl p-6 sm:p-10 z-10 transition-all duration-500">
+    <div class="bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] rounded-3xl w-full max-w-4xl p-6 sm:p-10 z-10 transition-all duration-500">
         
         <!-- ================= STEP 1: LANDING PAGE ================= -->
         <div id="step1" class="flex flex-col items-center text-center space-y-8 animate-zoom-in">
@@ -107,68 +107,153 @@
                     </div>
                 </div>
 
-                <!-- Kelas yang diampu -->
-                <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-700">
-                        Kelas yang Diampu <span class="text-xs font-normal text-slate-500">(Bisa pilih lebih dari satu untuk kolektif)</span>
+                <hr class="border-indigo-100/60 my-4">
+
+                <!-- Pilihan Kelas -->
+                <div class="space-y-4">
+                    <label class="text-sm font-semibold text-slate-700 block">
+                        Pilih Kelas yang Diampu <span class="text-xs font-normal text-slate-500 block sm:inline mt-1 sm:mt-0">(Pilih kelas untuk memunculkan kotak upload)</span>
                     </label>
                     <div class="flex flex-wrap gap-3">
                         <label class="cursor-pointer">
-                            <input type="checkbox" name="kelas" value="VII" class="kelas-checkbox hidden">
-                            <span class="inline-block px-4 py-2 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas VII</span>
+                            <input type="checkbox" id="chk_VII" value="VII" class="kelas-checkbox hidden">
+                            <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas VII</span>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="checkbox" name="kelas" value="VIII" class="kelas-checkbox hidden">
-                            <span class="inline-block px-4 py-2 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas VIII</span>
+                            <input type="checkbox" id="chk_VIII" value="VIII" class="kelas-checkbox hidden">
+                            <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas VIII</span>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="checkbox" name="kelas" value="IX" class="kelas-checkbox hidden">
-                            <span class="inline-block px-4 py-2 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas IX</span>
+                            <input type="checkbox" id="chk_IX" value="IX" class="kelas-checkbox hidden">
+                            <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border bg-white/70 border-slate-200 text-slate-600 font-medium transition-all">Kelas IX</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- File Uploads -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- File Soal -->
-                    <div class="relative group">
-                        <div id="containerSoal" class="flex flex-col items-center justify-center w-full h-40 px-4 py-6 bg-blue-50/50 border-2 border-dashed border-blue-300 rounded-2xl hover:bg-blue-50 hover:border-blue-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
-                            <!-- Tombol Hapus Soal -->
-                            <button id="btnRemoveSoal" type="button" class="hidden absolute top-3 right-3 p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File Soal">
-                                <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
-                            </button>
-                            
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center z-10 pointer-events-none">
-                                <i data-lucide="file-text" id="iconSoal" class="w-10 h-10 mb-3 text-blue-400 group-hover:text-blue-500 group-hover:scale-110 transition-transform duration-300"></i>
-                                <p id="textSoal" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-2">Klik atau Drag & Drop Soal (Word)</p>
-                                <p id="subtextSoal" class="text-xs text-slate-500 mt-1">.doc, .docx, .docm</p>
-                                <p id="sizeSoal" class="text-xs font-bold text-blue-600 mt-2 hidden"></p>
+                <!-- Container Dynamic Upload Area per Kelas -->
+                <div id="uploadContainers" class="space-y-5">
+                    
+                    <!-- KELAS VII: Dropzone Section -->
+                    <div id="section_VII" class="hidden p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-4 animate-slide-up">
+                        <h3 class="font-bold text-indigo-900 flex items-center gap-2 border-b border-indigo-200 pb-2">
+                            <i data-lucide="folder-check" class="w-5 h-5 text-indigo-500"></i> Upload Dokumen - Kelas VII
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- File Soal VII -->
+                            <div class="relative group">
+                                <div id="containerSoal_VII" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-blue-50/60 border-2 border-dashed border-blue-300 rounded-2xl hover:bg-blue-100 hover:border-blue-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveSoal_VII" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-text" id="iconSoal_VII" class="w-8 h-8 mb-2 text-blue-400 group-hover:text-blue-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textSoal_VII" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Soal Word (Kls VII)</p>
+                                        <p id="subtextSoal_VII" class="text-[11px] text-slate-500 mt-1">.doc, .docx</p>
+                                        <p id="sizeSoal_VII" class="text-xs font-bold text-blue-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputSoal_VII" type="file" class="hidden" accept=".doc,.docm,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                            </div>
+                            <!-- File KJ VII -->
+                            <div class="relative group">
+                                <div id="containerKJ_VII" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-green-50/60 border-2 border-dashed border-green-300 rounded-2xl hover:bg-green-100 hover:border-green-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveKJ_VII" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-spreadsheet" id="iconKJ_VII" class="w-8 h-8 mb-2 text-green-400 group-hover:text-green-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textKJ_VII" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Kunci Excel (Kls VII)</p>
+                                        <p id="subtextKJ_VII" class="text-[11px] text-slate-500 mt-1">.xls, .xlsx</p>
+                                        <p id="sizeKJ_VII" class="text-xs font-bold text-green-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputKJ_VII" type="file" class="hidden" accept=".xls,.xlsm,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                             </div>
                         </div>
-                        <input id="inputSoal" type="file" class="hidden" accept=".doc,.docm,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                     </div>
 
-                    <!-- File KJ -->
-                    <div class="relative group">
-                        <div id="containerKJ" class="flex flex-col items-center justify-center w-full h-40 px-4 py-6 bg-green-50/50 border-2 border-dashed border-green-300 rounded-2xl hover:bg-green-50 hover:border-green-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
-                            <!-- Tombol Hapus KJ -->
-                            <button id="btnRemoveKJ" type="button" class="hidden absolute top-3 right-3 p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File Kunci Jawaban">
-                                <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
-                            </button>
-                            
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center z-10 pointer-events-none">
-                                <i data-lucide="file-spreadsheet" id="iconKJ" class="w-10 h-10 mb-3 text-green-400 group-hover:text-green-500 group-hover:scale-110 transition-transform duration-300"></i>
-                                <p id="textKJ" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-2">Klik atau Drag & Drop Kunci Jawaban</p>
-                                <p id="subtextKJ" class="text-xs text-slate-500 mt-1">Excel (.xls, .xlsx, .xlsm)</p>
-                                <p id="sizeKJ" class="text-xs font-bold text-green-600 mt-2 hidden"></p>
+                    <!-- KELAS VIII: Dropzone Section -->
+                    <div id="section_VIII" class="hidden p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-4 animate-slide-up">
+                        <h3 class="font-bold text-indigo-900 flex items-center gap-2 border-b border-indigo-200 pb-2">
+                            <i data-lucide="folder-check" class="w-5 h-5 text-indigo-500"></i> Upload Dokumen - Kelas VIII
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- File Soal VIII -->
+                            <div class="relative group">
+                                <div id="containerSoal_VIII" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-blue-50/60 border-2 border-dashed border-blue-300 rounded-2xl hover:bg-blue-100 hover:border-blue-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveSoal_VIII" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-text" id="iconSoal_VIII" class="w-8 h-8 mb-2 text-blue-400 group-hover:text-blue-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textSoal_VIII" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Soal Word (Kls VIII)</p>
+                                        <p id="subtextSoal_VIII" class="text-[11px] text-slate-500 mt-1">.doc, .docx</p>
+                                        <p id="sizeSoal_VIII" class="text-xs font-bold text-blue-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputSoal_VIII" type="file" class="hidden" accept=".doc,.docm,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                            </div>
+                            <!-- File KJ VIII -->
+                            <div class="relative group">
+                                <div id="containerKJ_VIII" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-green-50/60 border-2 border-dashed border-green-300 rounded-2xl hover:bg-green-100 hover:border-green-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveKJ_VIII" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-spreadsheet" id="iconKJ_VIII" class="w-8 h-8 mb-2 text-green-400 group-hover:text-green-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textKJ_VIII" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Kunci Excel (Kls VIII)</p>
+                                        <p id="subtextKJ_VIII" class="text-[11px] text-slate-500 mt-1">.xls, .xlsx</p>
+                                        <p id="sizeKJ_VIII" class="text-xs font-bold text-green-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputKJ_VIII" type="file" class="hidden" accept=".xls,.xlsm,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                             </div>
                         </div>
-                        <input id="inputKJ" type="file" class="hidden" accept=".xls,.xlsm,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                     </div>
+
+                    <!-- KELAS IX: Dropzone Section -->
+                    <div id="section_IX" class="hidden p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-4 animate-slide-up">
+                        <h3 class="font-bold text-indigo-900 flex items-center gap-2 border-b border-indigo-200 pb-2">
+                            <i data-lucide="folder-check" class="w-5 h-5 text-indigo-500"></i> Upload Dokumen - Kelas IX
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- File Soal IX -->
+                            <div class="relative group">
+                                <div id="containerSoal_IX" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-blue-50/60 border-2 border-dashed border-blue-300 rounded-2xl hover:bg-blue-100 hover:border-blue-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveSoal_IX" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-text" id="iconSoal_IX" class="w-8 h-8 mb-2 text-blue-400 group-hover:text-blue-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textSoal_IX" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Soal Word (Kls IX)</p>
+                                        <p id="subtextSoal_IX" class="text-[11px] text-slate-500 mt-1">.doc, .docx</p>
+                                        <p id="sizeSoal_IX" class="text-xs font-bold text-blue-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputSoal_IX" type="file" class="hidden" accept=".doc,.docm,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                            </div>
+                            <!-- File KJ IX -->
+                            <div class="relative group">
+                                <div id="containerKJ_IX" class="flex flex-col items-center justify-center w-full h-36 px-3 py-5 bg-green-50/60 border-2 border-dashed border-green-300 rounded-2xl hover:bg-green-100 hover:border-green-500 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                                    <button id="btnRemoveKJ_IX" type="button" class="hidden absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full hover:bg-red-200 hover:scale-110 transition-all z-20 shadow-sm" title="Hapus File">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center z-10 pointer-events-none">
+                                        <i data-lucide="file-spreadsheet" id="iconKJ_IX" class="w-8 h-8 mb-2 text-green-400 group-hover:text-green-500 group-hover:scale-110 transition-transform duration-300"></i>
+                                        <p id="textKJ_IX" class="mb-1 text-sm font-semibold text-slate-700 break-all line-clamp-2 px-1">Kunci Excel (Kls IX)</p>
+                                        <p id="subtextKJ_IX" class="text-[11px] text-slate-500 mt-1">.xls, .xlsx</p>
+                                        <p id="sizeKJ_IX" class="text-xs font-bold text-green-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                                <input id="inputKJ_IX" type="file" class="hidden" accept=".xls,.xlsm,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Submit Button -->
-                <div class="pt-4 flex items-center justify-between gap-4">
+                <div class="pt-6 border-t border-slate-200 flex items-center justify-between gap-4">
                     <button type="button" onclick="goToStep(1)" class="px-6 py-3 text-slate-500 hover:text-slate-800 font-medium transition-colors">
                         Batal
                     </button>
@@ -183,19 +268,19 @@
 
         <!-- ================= STEP 3: SUCCESS ================= -->
         <div id="step3" class="hidden flex-col items-center text-center space-y-6 py-8 animate-zoom-in">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2 shadow-inner">
                 <i data-lucide="check-circle" class="w-10 h-10 text-green-500"></i>
             </div>
             
-            <div class="space-y-2">
-                <h2 class="text-2xl font-bold text-slate-800">File Berhasil Terkirim!</h2>
-                <p class="text-slate-600 max-w-md mx-auto">
-                    Terima kasih <strong id="successNama"></strong>, Soal dan Kunci Jawaban untuk kelas <strong id="successKelas"></strong> telah berhasil diunggah ke Google Drive Panitia Ujian SMPN 266 Jakarta.
+            <div class="space-y-3">
+                <h2 class="text-2xl font-bold text-slate-800">Dokumen Berhasil Terkirim!</h2>
+                <p class="text-slate-600 max-w-lg mx-auto leading-relaxed">
+                    Terima kasih <strong id="successNama" class="text-indigo-700"></strong>. Seluruh Soal dan Kunci Jawaban untuk <strong id="successKelas" class="text-indigo-700"></strong> telah berhasil diunggah dan masuk ke Folder Drive per Kelas masing-masing.
                 </p>
             </div>
 
             <button onclick="resetApp()" class="mt-6 px-8 py-3 bg-slate-800 text-white font-medium rounded-xl hover:bg-slate-700 transition-colors shadow-lg">
-                Upload File Lainnya
+                Selesai / Upload Lainnya
             </button>
         </div>
         
@@ -210,7 +295,7 @@
         window.addEventListener("dragover", function(e){ e.preventDefault(); }, false);
         window.addEventListener("drop", function(e){ e.preventDefault(); }, false);
 
-        // Konfigurasi URL Google Apps Script
+        // Konfigurasi URL Google Apps Script (PASTIKAN SUDAH DEPLOY ULANG GAS YANG BARU)
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxsiVE5KXz7CxSETFZM4UHw4I05zimKBX32Ny7eBFMiGmArH08W958bHVTK_w9-mnDSw/exec";
         
         // Pemetaan Folder Drive Berdasarkan Kelas
@@ -220,76 +305,158 @@
             "IX": "147BZN4Nibqp2VqWZV4Ni-ktFcSZ-Zrrt"
         };
 
+        const CLASSES = ["VII", "VIII", "IX"];
+
         // State Global
         let teacherData = {};
 
-        // Referensi Elemen DOM
+        // Referensi Elemen DOM Umum
         const step1 = document.getElementById('step1');
         const step2 = document.getElementById('step2');
         const step3 = document.getElementById('step3');
-        
         const nipSelect = document.getElementById('nipSelect');
         const namaInput = document.getElementById('namaInput');
-        
-        const inputSoal = document.getElementById('inputSoal');
-        const textSoal = document.getElementById('textSoal');
-        const subtextSoal = document.getElementById('subtextSoal');
-        const iconSoal = document.getElementById('iconSoal');
-        const containerSoal = document.getElementById('containerSoal');
-        const sizeSoal = document.getElementById('sizeSoal');
-        const btnRemoveSoal = document.getElementById('btnRemoveSoal');
-
-        const inputKJ = document.getElementById('inputKJ');
-        const textKJ = document.getElementById('textKJ');
-        const subtextKJ = document.getElementById('subtextKJ');
-        const iconKJ = document.getElementById('iconKJ');
-        const containerKJ = document.getElementById('containerKJ');
-        const sizeKJ = document.getElementById('sizeKJ');
-        const btnRemoveKJ = document.getElementById('btnRemoveKJ');
-
         const errorBox = document.getElementById('errorBox');
         const errorText = document.getElementById('errorText');
         const uploadForm = document.getElementById('uploadForm');
-        
         const submitBtn = document.getElementById('submitBtn');
         const submitIconDefault = document.getElementById('submitIconDefault');
         const submitIconLoading = document.getElementById('submitIconLoading');
         const submitText = document.getElementById('submitText');
 
-        // Navigasi Antar Halaman (Step)
-        function goToStep(step) {
-            step1.classList.add('hidden');
-            step1.classList.remove('flex');
-            step2.classList.add('hidden');
-            step3.classList.add('hidden');
-            step3.classList.remove('flex');
-
-            if (step === 1) {
-                step1.classList.remove('hidden');
-                step1.classList.add('flex');
-            } else if (step === 2) {
-                step2.classList.remove('hidden');
-            } else if (step === 3) {
-                step3.classList.remove('hidden');
-                step3.classList.add('flex');
-            }
+        // Helper: Format Ukuran File untuk tampilan visual (KB/MB)
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
         }
 
-        // Ambil Data Guru dari Google Apps Script saat halaman dimuat
+        // Logic Setup untuk Tiap Kelas
+        CLASSES.forEach(kls => {
+            const chk = document.getElementById(`chk_${kls}`);
+            const section = document.getElementById(`section_${kls}`);
+            
+            // Tampilkan Dropzone saat Kelas dicentang
+            chk.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    section.classList.remove('hidden');
+                    section.classList.add('block');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('block');
+                    // Jika di-uncheck, otomatis hapus input file-nya agar tidak terkirim tidak sengaja
+                    document.getElementById(`btnRemoveSoal_${kls}`).click();
+                    document.getElementById(`btnRemoveKJ_${kls}`).click();
+                }
+            });
+
+            // Pasang File Handler untuk Soal per Kelas
+            handleFileInput(
+                document.getElementById(`inputSoal_${kls}`),
+                document.getElementById(`textSoal_${kls}`),
+                document.getElementById(`subtextSoal_${kls}`),
+                document.getElementById(`iconSoal_${kls}`),
+                document.getElementById(`containerSoal_${kls}`),
+                document.getElementById(`sizeSoal_${kls}`),
+                document.getElementById(`btnRemoveSoal_${kls}`),
+                `Soal Word (Kls ${kls})`, "blue", "blue"
+            );
+
+            // Pasang File Handler untuk KJ per Kelas
+            handleFileInput(
+                document.getElementById(`inputKJ_${kls}`),
+                document.getElementById(`textKJ_${kls}`),
+                document.getElementById(`subtextKJ_${kls}`),
+                document.getElementById(`iconKJ_${kls}`),
+                document.getElementById(`containerKJ_${kls}`),
+                document.getElementById(`sizeKJ_${kls}`),
+                document.getElementById(`btnRemoveKJ_${kls}`),
+                `Kunci Excel (Kls ${kls})`, "green", "green"
+            );
+        });
+
+        // File Input UI Handler Master Function
+        function handleFileInput(inputEl, textEl, subtextEl, iconEl, containerEl, sizeEl, removeBtnEl, defaultText, colorClassDefault, colorClassActive) {
+            containerEl.addEventListener('click', () => { inputEl.click(); });
+
+            const updateUI = (files) => {
+                if (files && files.length > 0) {
+                    const file = files[0];
+                    textEl.textContent = file.name;
+                    subtextEl.classList.add('hidden');
+                    sizeEl.textContent = formatBytes(file.size);
+                    sizeEl.classList.remove('hidden');
+                    removeBtnEl.classList.remove('hidden');
+                    
+                    iconEl.classList.remove(`text-${colorClassDefault}-400`);
+                    iconEl.classList.add(`text-${colorClassActive}-600`);
+                    containerEl.classList.add(`bg-${colorClassActive}-100`, `border-${colorClassActive}-400`, 'border-solid');
+                    containerEl.classList.remove('border-dashed', `bg-${colorClassDefault}-50/60`, `border-${colorClassDefault}-300`);
+                } else {
+                    textEl.textContent = defaultText;
+                    subtextEl.classList.remove('hidden');
+                    sizeEl.classList.add('hidden');
+                    sizeEl.textContent = '';
+                    removeBtnEl.classList.add('hidden');
+                    
+                    iconEl.classList.add(`text-${colorClassDefault}-400`);
+                    iconEl.classList.remove(`text-${colorClassActive}-600`);
+                    containerEl.classList.remove(`bg-${colorClassActive}-100`, `border-${colorClassActive}-400`, 'border-solid');
+                    containerEl.classList.add('border-dashed', `bg-${colorClassDefault}-50/60`, `border-${colorClassDefault}-300`);
+                }
+            };
+
+            inputEl.addEventListener('change', (e) => updateUI(e.target.files));
+
+            removeBtnEl.addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                inputEl.value = ''; updateUI([]);
+            });
+
+            containerEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                containerEl.classList.add('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-200`);
+            });
+            containerEl.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                containerEl.classList.remove('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-200`);
+            });
+            containerEl.addEventListener('drop', (e) => {
+                e.preventDefault();
+                containerEl.classList.remove('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-200`);
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    inputEl.files = e.dataTransfer.files;
+                    updateUI(e.dataTransfer.files);
+                }
+            });
+        }
+
+        // Helper: File ke Base64
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve({
+                filename: file.name,
+                mimeType: file.type,
+                base64: reader.result.split(',')[1]
+            });
+            reader.onerror = error => reject(error);
+        });
+
+        // Ambil Data Guru saat awal muat
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch(GAS_WEB_APP_URL);
                 const result = await response.json();
-                
                 if (result.status === "success") {
                     teacherData = result.data;
-                    
-                    // Reset dan isi opsi NIP
                     nipSelect.innerHTML = '<option value="" disabled selected>-- Pilih NIP --</option>';
                     for (const nip in teacherData) {
                         const option = document.createElement('option');
-                        option.value = nip;
-                        option.textContent = nip;
+                        option.value = nip; option.textContent = nip;
                         nipSelect.appendChild(option);
                     }
                     nipSelect.disabled = false;
@@ -304,118 +471,29 @@
             }
         });
 
-        // Event Listener: Pilih NIP -> Otomatis isi Nama
         nipSelect.addEventListener('change', (e) => {
-            const selectedNip = e.target.value;
-            namaInput.value = teacherData[selectedNip] || '';
+            namaInput.value = teacherData[e.target.value] || '';
         });
 
-        // Helper: Format Ukuran File untuk tampilan visual (KB/MB)
-        function formatBytes(bytes, decimals = 2) {
-            if (!+bytes) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-        }
-
-        // Event Listener & Drag-Drop: File Input UI Handler Kelas Premium
-        function handleFileInput(inputEl, textEl, subtextEl, iconEl, containerEl, sizeEl, removeBtnEl, defaultText, colorClassDefault, colorClassActive) {
-            
-            // Memicu klik pada input file saat area Dropzone diklik (Perbaikan bug klik mati)
-            containerEl.addEventListener('click', () => {
-                inputEl.click();
-            });
-
-            const updateUI = (files) => {
-                if (files && files.length > 0) {
-                    const file = files[0];
-                    textEl.textContent = file.name;
-                    subtextEl.classList.add('hidden');
-                    sizeEl.textContent = formatBytes(file.size);
-                    sizeEl.classList.remove('hidden');
-                    removeBtnEl.classList.remove('hidden');
-                    
-                    // Ubah styling kotak menjadi "Solid" sebagai penanda file sukses dimasukkan
-                    iconEl.classList.remove(`text-${colorClassDefault}-400`);
-                    iconEl.classList.add(`text-${colorClassActive}-600`);
-                    containerEl.classList.add(`bg-${colorClassActive}-50`, `border-${colorClassActive}-400`, 'border-solid');
-                    containerEl.classList.remove('border-dashed', `bg-${colorClassDefault}-50/50`, `border-${colorClassDefault}-300`);
-                } else {
-                    textEl.textContent = defaultText;
-                    subtextEl.classList.remove('hidden');
-                    sizeEl.classList.add('hidden');
-                    sizeEl.textContent = '';
-                    removeBtnEl.classList.add('hidden');
-                    
-                    iconEl.classList.add(`text-${colorClassDefault}-400`);
-                    iconEl.classList.remove(`text-${colorClassActive}-600`);
-                    containerEl.classList.remove(`bg-${colorClassActive}-50`, `border-${colorClassActive}-400`, 'border-solid');
-                    containerEl.classList.add('border-dashed', `bg-${colorClassDefault}-50/50`, `border-${colorClassDefault}-300`);
-                }
-            };
-
-            inputEl.addEventListener('change', (e) => updateUI(e.target.files));
-
-            // Fitur Hapus File
-            removeBtnEl.addEventListener('click', (e) => {
-                e.preventDefault(); // Mencegah terbukanya pop-up folder
-                e.stopPropagation(); // Menghentikan klik agar tidak menyebar ke elemen label
-                inputEl.value = ''; // Kosongkan file input
-                updateUI([]); // Kembalikan UI ke kondisi semula
-            });
-
-            // Efek interaktif Drag & Drop
-            containerEl.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                containerEl.classList.add('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-100`);
-            });
-            
-            containerEl.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                containerEl.classList.remove('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-100`);
-            });
-            
-            containerEl.addEventListener('drop', (e) => {
-                e.preventDefault();
-                containerEl.classList.remove('scale-[1.02]', `border-${colorClassActive}-500`, `bg-${colorClassActive}-100`);
-                
-                // Masukkan file hasil Drop ke Input
-                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                    inputEl.files = e.dataTransfer.files;
-                    updateUI(e.dataTransfer.files);
-                }
-            });
-        }
-
-        handleFileInput(inputSoal, textSoal, subtextSoal, iconSoal, containerSoal, sizeSoal, btnRemoveSoal, "Klik atau Drag & Drop Soal (Word)", "blue", "blue");
-        handleFileInput(inputKJ, textKJ, subtextKJ, iconKJ, containerKJ, sizeKJ, btnRemoveKJ, "Klik atau Drag & Drop Kunci Jawaban", "green", "green");
-
-        // Helper: File ke Base64
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve({
-                filename: file.name,
-                mimeType: file.type,
-                base64: reader.result.split(',')[1] // Ambil data base64 setelah koma
-            });
-            reader.onerror = error => reject(error);
-        });
-
-        // Fungsi Tampilkan Pesan Error
         function showError(msg) {
-            errorText.textContent = msg;
-            errorBox.classList.remove('hidden');
+            errorText.textContent = msg; errorBox.classList.remove('hidden');
         }
-
         function hideError() {
-            errorBox.classList.add('hidden');
-            errorText.textContent = '';
+            errorBox.classList.add('hidden'); errorText.textContent = '';
         }
 
-        // Handle Submit Form
+        // Navigasi
+        function goToStep(step) {
+            step1.classList.add('hidden'); step1.classList.remove('flex');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden'); step3.classList.remove('flex');
+
+            if (step === 1) { step1.classList.remove('hidden'); step1.classList.add('flex'); } 
+            else if (step === 2) { step2.classList.remove('hidden'); } 
+            else if (step === 3) { step3.classList.remove('hidden'); step3.classList.add('flex'); }
+        }
+
+        // Handle Submit Data Keseluruhan
         uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideError();
@@ -423,42 +501,51 @@
             const nip = nipSelect.value;
             const nama = namaInput.value;
             
-            // Dapatkan array kelas yang dicentang
-            const kelasChecked = Array.from(document.querySelectorAll('input[name="kelas"]:checked')).map(cb => cb.value);
-            
-            // Konversi Kelas menjadi array Folder ID yang sesuai
-            const targetFolderIds = kelasChecked.map(kls => FOLDER_MAPPING[kls]);
+            // Ambil daftar kelas yang dicentang
+            const checkedClasses = CLASSES.filter(kls => document.getElementById(`chk_${kls}`).checked);
 
-            const fileSoal = inputSoal.files[0];
-            const fileKJ = inputKJ.files[0];
-
-            // Validasi Input
-            if (!nip || kelasChecked.length === 0 || !fileSoal || !fileKJ) {
-                showError("Mohon lengkapi NIP, Kelas, dan unggah kedua file sebelum mengirim.");
+            if (!nip) {
+                showError("Pilih NIP Guru terlebih dahulu.");
                 return;
             }
 
-            // Ubah UI Tombol menjadi Loading
+            if (checkedClasses.length === 0) {
+                showError("Pilih minimal satu kelas yang diampu.");
+                return;
+            }
+
+            // Kumpulkan file dari tiap kelas yang dipilih
+            let uploads = [];
+            for (const kls of checkedClasses) {
+                const fileSoal = document.getElementById(`inputSoal_${kls}`).files[0];
+                const fileKJ = document.getElementById(`inputKJ_${kls}`).files[0];
+
+                if (!fileSoal || !fileKJ) {
+                    showError(`Mohon unggah Soal dan Kunci Jawaban untuk Kelas ${kls}.`);
+                    return;
+                }
+
+                // Ubah ke base64 (harus await satu persatu)
+                const base64Soal = await toBase64(fileSoal);
+                const base64KJ = await toBase64(fileKJ);
+
+                uploads.push({
+                    kelas: kls,
+                    folderId: FOLDER_MAPPING[kls],
+                    fileSoal: base64Soal,
+                    fileKJ: base64KJ
+                });
+            }
+
+            // Mulai Proses Pengiriman
             submitBtn.disabled = true;
             submitIconDefault.classList.add('hidden');
             submitIconLoading.classList.remove('hidden');
             submitText.textContent = "Mengirim...";
 
             try {
-                // Konversi file ke base64
-                const base64Soal = await toBase64(fileSoal);
-                const base64KJ = await toBase64(fileKJ);
+                const payload = { nip: nip, nama: nama, uploads: uploads };
 
-                const payload = {
-                    nip: nip,
-                    nama: nama,
-                    kelas: kelasChecked.join(", "),
-                    folderIds: targetFolderIds, // Payload baru: Mengirim array ID Folder 
-                    fileSoal: base64Soal,
-                    fileKJ: base64KJ
-                };
-
-                // Kirim POST Request ke Google Apps Script
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: "POST",
                     body: JSON.stringify(payload)
@@ -467,19 +554,16 @@
                 const result = await response.json();
 
                 if(result.status === "success") {
-                    // Berhasil, update data di step 3 lalu pindah halaman
                     document.getElementById('successNama').textContent = nama;
-                    document.getElementById('successKelas').textContent = payload.kelas;
+                    document.getElementById('successKelas').textContent = "Kelas " + checkedClasses.join(", ");
                     goToStep(3);
                 } else {
-                    showError("Error dari server: " + (result.message || "Gagal mengirim file."));
+                    showError("Error Server: " + (result.message || "Gagal mengirim file."));
                 }
-
             } catch (error) {
                 console.error(error);
                 showError("Terjadi kesalahan sistem. Pastikan koneksi internet stabil.");
             } finally {
-                // Kembalikan UI Tombol ke semula
                 submitBtn.disabled = false;
                 submitIconDefault.classList.remove('hidden');
                 submitIconLoading.classList.add('hidden');
@@ -487,27 +571,18 @@
             }
         });
 
-        // Reset Aplikasi
+        // Fungsi Reset Seluruh UI ke kondisi bersih
         function resetApp() {
             uploadForm.reset();
             namaInput.value = '';
             
-            // Reset UI File Dropzone sepenuhnya ke state awal
-            textSoal.textContent = "Klik atau Drag & Drop Soal (Word)";
-            subtextSoal.classList.remove('hidden');
-            sizeSoal.classList.add('hidden');
-            btnRemoveSoal.classList.add('hidden');
-            iconSoal.className = "lucide lucide-file-text w-10 h-10 mb-3 text-blue-400 group-hover:text-blue-500 group-hover:scale-110 transition-transform duration-300";
-            containerSoal.classList.remove('bg-blue-50', 'border-blue-400', 'border-solid');
-            containerSoal.classList.add('border-dashed', 'bg-blue-50/50', 'border-blue-300');
-
-            textKJ.textContent = "Klik atau Drag & Drop Kunci Jawaban";
-            subtextKJ.classList.remove('hidden');
-            sizeKJ.classList.add('hidden');
-            btnRemoveKJ.classList.add('hidden');
-            iconKJ.className = "lucide lucide-file-spreadsheet w-10 h-10 mb-3 text-green-400 group-hover:text-green-500 group-hover:scale-110 transition-transform duration-300";
-            containerKJ.classList.remove('bg-green-50', 'border-green-400', 'border-solid');
-            containerKJ.classList.add('border-dashed', 'bg-green-50/50', 'border-green-300');
+            // Hentikan dan hapus semua item untuk setiap kelas
+            CLASSES.forEach(kls => {
+                document.getElementById(`btnRemoveSoal_${kls}`).click();
+                document.getElementById(`btnRemoveKJ_${kls}`).click();
+                document.getElementById(`section_${kls}`).classList.add('hidden');
+                document.getElementById(`section_${kls}`).classList.remove('block');
+            });
             
             hideError();
             goToStep(1);
